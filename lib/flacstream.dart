@@ -25,11 +25,12 @@ class FlacInfo {
         var type = header & 0x7F;
         var sizes = rf.readSync(3);
         var dataLength = (sizes[0] << 16) + (sizes[1] << 8) + sizes[2];
-        var metadataBytes = rf.readSync(dataLength);
+        var metadataBytes = await rf.read(dataLength);
         var metadata = _createMetadata(type, isLast, metadataBytes, dataLength);
         metadatas.add(metadata);
       }
     }
+    await rf.close();
     return metadatas;
   }
 
